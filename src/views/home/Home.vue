@@ -37,6 +37,7 @@
 
   import {getHomeMultidata,getHomeGoods} from 'network/home';
   import {debounce} from 'common/utils';
+  import {itemListenerMixin} from 'common/mixin';
 
   
   
@@ -53,6 +54,7 @@
         Scroll,
         BackTop
       },
+      mixins:[itemListenerMixin],
       computed: {
         showGoods(){
           return this.goods[this.currentType].list
@@ -63,7 +65,11 @@
         this.$refs.scroll.refresh()
       },
       deactivated() {
+        //保存Y值
         this.saveY = this.$refs.scroll.getScrollY()
+
+        //取消全局事件的监听
+        this.$bus.$off('itemImageLoad',this.itemImageListener)
       },
       data(){
         return {
@@ -78,7 +84,7 @@
           isShow:false,
           tabOffsetTop:0,
           isTabFixed:false,
-          saveY:0
+          saveY:0,
         }
       },
       created(){
@@ -92,16 +98,6 @@
         
       },
       mounted() {
-        //1.图片加载完成的事件监听
-        const refresh =  debounce(this.$refs.scroll.refresh,200)
-        this.$bus.$on('itemImageLoad',()=>{
-          //console.log('---------');
-
-          refresh()
-        })
-        
-        
-
       },
       methods: {
         /* 事件监听相关方法 */
@@ -141,7 +137,6 @@
         swiperImageLoad(){
           //2. 获取tabOffsetTop的offsetTop
           //所有组件都有一个属性$el:用于获取组件中的圆度
-          console.log(this.$refs.tabControl2.$el.offsetTop);
           this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
         },
         /* 网络请求相关方法 */
@@ -155,7 +150,7 @@
         getHomeGoods(type){
           const page = this.goods[type].page + 1
           getHomeGoods(type,page).then(res=>{
-            console.log(res);
+
             this.goods[type].list.push(...res.data.list)
             this.goods[type].page++
 
