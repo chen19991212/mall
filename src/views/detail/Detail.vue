@@ -175,12 +175,14 @@
         //1.获取购物车需要展示的商品信息
         const product = {}
         product.image = this.topImages[0]
-        product.title = this.goods-info.title
-        product.desc = this.goods-info.desc
-        product.price = this.goods-info.realPrice
+        product.title = this.goods.title
+        product.desc = this.goods.desc
+        product.price = this.goods.realPrice
         product.iid = this.iid
         //2.将商品添加到购物车
-
+        //this.$store.cartList.push(product)
+        //this.$store.commit('addCart',product)
+        this.$store.dispatch('addCart',product)
       }
       
 
