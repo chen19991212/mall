@@ -23,7 +23,7 @@ export class Goods{
     this.discount = itemInfo.discount
     this.columns = columns
     this.services = services
-    this.realPrice = itemInfo.loaNowPrice
+    this.realPrice = itemInfo.lowNowPrice
   }
 }
 export class Shop{

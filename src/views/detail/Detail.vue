@@ -81,6 +81,7 @@
         this.topImages = data.itemInfo.topImages
         //3.获取商品信息
         this.goods = new Goods(data.itemInfo,data.columns,data.shopInfo.services)
+        console.log(data.itemInfo);
         //4.创建店铺信息
         this.shop = new Shop(data.shopInfo)
         //5.保存商品的详情数据
@@ -119,7 +120,6 @@
       }) 
       //3.请求推荐数据
       getRecommend().then(res=>{
-        console.log(res);
         this.recommends = res.data.list
       })
       //对赋值操作进行防抖
@@ -178,6 +178,7 @@
         product.title = this.goods.title
         product.desc = this.goods.desc
         product.price = this.goods.realPrice
+        console.log(this.goods);
         product.iid = this.iid
         //2.将商品添加到购物车
         //this.$store.cartList.push(product)
