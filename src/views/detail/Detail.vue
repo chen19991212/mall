@@ -15,6 +15,7 @@
     </scroll>
     <detail-bottom-bar @addCart="addToCart" />
     <back-top @click.native="backClick" v-show="isShow"></back-top>
+    <!-- <toast :message="message" :show="show" /> -->
     
   </div>
 </template>
@@ -31,12 +32,14 @@
 
   import Scroll from 'components/common/scroll/Scroll';
   import GoodsList from 'components/content/goods/GoodsList';
-
+  //import Toast from 'components/common/toast/Toast';
   
 
   import {getDetail,Goods,Shop,GoodsParam,getRecommend} from 'network/detail.js';
   import {debounce} from 'common/utils';
   import {itemListenerMixin,backTopMixin} from 'common/mixin';
+
+  import {mapActions} from 'vuex';
 
   export default {
     name:"Detail",
@@ -52,6 +55,7 @@
       GoodsList,        //推荐商品
       DetailBottomBar,  //底部导航栏
       //BackTop         //返回页面顶部按钮
+      //Toast
     },
     mixins:[itemListenerMixin,backTopMixin],
     data() {
@@ -67,6 +71,8 @@
         themeTopYs:[],
         getThemeTopY:null,
         currentIndex:0,
+        /* message:'',
+        show:false */
       }
     },
     created() {
@@ -135,6 +141,7 @@
       },100)
     },
     methods: {
+      ...mapActions(['addCart']),
       imageLoad(){
         this.$refs.scroll.refresh()
         this.getThemeTopY()
@@ -180,10 +187,25 @@
         product.price = this.goods.realPrice
         console.log(this.goods);
         product.iid = this.iid
-        //2.将商品添加到购物车
+        //2.将商品添加到购物车(1.Promise 2. mapActions)
         //this.$store.cartList.push(product)
         //this.$store.commit('addCart',product)
-        this.$store.dispatch('addCart',product)
+        /* this.$store.dispatch('addCart',product).then(res=>{
+          console.log(res);
+        }) */
+        this.addCart(product).then(res=>{
+          /* this.show = true
+          this.message = res
+          setTimeout(() => {
+            this.show = false
+            this.message = ''
+          }, 1500); */
+          console.log(this.$toast);
+          this.$toast.show(res)
+        })
+
+        //3.添加到购物车成功
+
       }
       
 
